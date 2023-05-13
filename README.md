@@ -2,7 +2,7 @@
 
 This is an example console question and answer app that loads in a set of PDFs (recursively from PDF_ROOT directory)  and let's you ask questions about them using a semantic (meaning-based instead of keyword) search.
 
-It uses langchain (https://github.com/hwchase17/langchain/) with Postgres pgvector plug-in as the datastore and hkunlp/instructor-large (https://huggingface.co/hkunlp/instructor-large) open source embeddings from Hugging face. This allows you to create embeddings for free instead of using AopenAI's and needing to pay. 
+It uses langchain (https://github.com/hwchase17/langchain/) with Postgres pgvector plug-in as the datastore and hkunlp/instructor-large (https://huggingface.co/hkunlp/instructor-large) open source embeddings from Hugging face. This allows you to create embeddings for free instead of using OpenAI's and needing to pay. 
 
 It does use OpenAI llm for the question processing. I hope to change this to an open source llm that runs locally as well.
 
@@ -73,11 +73,14 @@ docker exec -it pg-docker bash
 ```
 
 Once in shell
-psql -U postgres
-\c {YOUR DATABASE NAME}
-Run the following
-```sql
-alter table langchain_pg_embedding alter column embedding type vector(768);
+
+```bash
+root@2045d767567:/# psql -U postgres
+psql (15.3 (Debian 15.3-1.pgdg110+1))
+Type "help" for help.
+
+postgres=#  \c {YOUR DATABASE NAME}
+postgres=# alter table langchain_pg_embedding alter column embedding type vector(768);
 ```
 
 ref: https://github.com/hwchase17/langchain/issues/2219
