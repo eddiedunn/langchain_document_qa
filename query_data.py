@@ -48,19 +48,15 @@ store = PGVector(
 retriever = store.as_retriever()
 
 #create the chain to answer questions 
-qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=OpenAI(temperature=1, ), 
+
+memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+qa_chain_instrucEmbed = ConversationalRetrievalChain.from_llm(
+                                  llm=OpenAI(temperature=0 ), 
                                   chain_type="stuff", 
                                   retriever=retriever, 
-                                  return_source_documents=True)
-
-# memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-# qa_chain_instrucEmbed = ConversationalRetrievalChain.from_llm(
-#                                   llm=OpenAI(temperature=0 ), 
-#                                   chain_type="stuff", 
-#                                   retriever=retriever, 
-#                                   memory=memory,
-#                                   return_source_documents=True
-# )
+                                  memory=memory,
+                                  return_source_documents=True
+)
 
 
 
@@ -93,8 +89,7 @@ def process_llm_response(llm_response):
 try:
     while True:
         query = input("Enter your query (or 'ctrl-c' to exit): ")
-        llm_response = qa_chain_instrucEmbed(query)
-        #llm_response = qa_chain_instrucEmbed({"question": query})
+        llm_response = qa_chain_instrucEmbed({"question": query})
         print(f"Query: {query}")
         print("Answer")
         process_llm_response(llm_response)
