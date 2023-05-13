@@ -54,7 +54,7 @@ python load_data.py
 python query_data.py
 ```
 
-### Temp Workaround for pgvector issue ( as of 5/13/2023)
+### Temp Workaround for langchain pgvector issue ( as of 5/13/2023)
 
 If you get 
 
@@ -63,10 +63,12 @@ If you get
 You must change a couple of things
 
 in {your python install}/site-packages/langchain/vectorstores/pgvector.py
+
 change
-ADA_TOKEN_COUNT = 768
-instead of 1536 
-in database
+`ADA_TOKEN_COUNT = 768`
+instead of `1536`
+
+in the database
 
 ```bash
 docker exec -it pg-docker bash
