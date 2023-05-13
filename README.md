@@ -37,7 +37,7 @@ Start container with a script similar to `docker_run.sh.example` (make a copy fi
 
 ### Configure Python environment
 
-You will need an nvidia video card and cuda drivers installed.
+I recommend using a virtualenv with conda or pyenv. You will also need an nvidia video card and cuda drivers installed.
 
 ```bash
 pip install python-dotenv openai langchain InstructorEmbedding pypdf pgvector psycopg2-binary torch torchvision torchaudio sentence_transformers
