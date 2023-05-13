@@ -1,6 +1,6 @@
 # Langchain Custom PDF Document Question Asker
 
-This is an example console question and answer app that loads in a set of PDFs (recursively from PDF_ROOT directory)  and let's you ask questions about them using a semantic (meaning-based instead of keyword) search.
+This is an example console question and answer app that loads in a set of PDFs (recursively from PDF_ROOT directory)  and let's you ask questions about them using a semantic search. Semantic search is meaning-based instead of keyword.
 
 It uses langchain (https://github.com/hwchase17/langchain/) with Postgres pgvector plug-in as the datastore and hkunlp/instructor-large (https://huggingface.co/hkunlp/instructor-large) open source embeddings from Hugging face. This allows you to create embeddings for free instead of using OpenAI's and needing to pay. 
 
