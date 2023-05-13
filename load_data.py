@@ -15,13 +15,8 @@ import torch
 from InstructorEmbedding import INSTRUCTOR
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 
-# change
-# ADA_TOKEN_COUNT = 768
-# in site-packages/langchain/vectorstores/pgvector.py
-# in database
-# alter table langchain_pg_embedding alter column embedding type vector(768);
 
-# pip install openai langchain InstructorEmbedding pypdf pgvector psycopg2-binary torch torchvision torchaudio sentence_transformers
+# pip install python-dotenv openai langchain InstructorEmbedding pypdf pgvector psycopg2-binary torch torchvision torchaudio sentence_transformers
 # load multiple pdfs recursively from a directory into postgres using InstructorEmbeddings.
 
 torch.cuda.empty_cache()
@@ -39,7 +34,7 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=333, chunk_overlap=33)
 texts = text_splitter.split_documents(documents)
 
 instructor_embeddings = HuggingFaceInstructEmbeddings(
-                            model_name="hkunlp/instructor-xl", 
+                            model_name="hkunlp/instructor-large", 
                             model_kwargs={"device": "cuda" }
 )
 
