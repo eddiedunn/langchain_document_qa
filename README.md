@@ -21,7 +21,8 @@ Modify with your specifics including:
 1. The place you would like your postgres data along with connection info
 2. Path to your documents
 3. Name of your collection (can be anything)
-4. live openai key (Only used for `query_data.py`)
+4. Can use `postgres` as `PGVECTOR_DATABASE` or create one (see below for how to create a new database)
+5. live openai key (Only used for `query_data.py`)
 
 ### Install pgvector
 To install pgvector using Docker (make sure you have docker installed)
@@ -53,6 +54,24 @@ python load_data.py
 ```bash
 python query_data.py
 ```
+
+
+### Create Database via command line
+
+```bash
+docker exec -it pg-docker bash
+```
+
+Once in shell
+
+```bash
+root@2045d767567:/# psql -U postgres
+psql (15.3 (Debian 15.3-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# CREATE DATABASE {YOUR DATABASE NAME}
+```
+
 
 ### `StatementError` Workaround   ( as of 5/13/2023)
 
@@ -86,4 +105,3 @@ postgres=# alter table langchain_pg_embedding alter column embedding type vector
 ```
 
 ref: https://github.com/hwchase17/langchain/issues/2219
-
