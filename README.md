@@ -54,7 +54,7 @@ python load_data.py
 python query_data.py
 ```
 
-### Temp Workaround for langchain pgvector issue ( as of 5/13/2023)
+### `StatementError` Workaround   ( as of 5/13/2023)
 
 If you get 
 
