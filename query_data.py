@@ -1,21 +1,19 @@
 import os
+# needed for llm in from_chain_type()
 import openai
 import textwrap
+# needed for editing questions on command line. Also allows to arrow up for previous questions
 import readline
 
-from typing import List, Tuple
 from dotenv import load_dotenv
 
 from langchain.llms import OpenAI
 from langchain.vectorstores.pgvector import PGVector
 from langchain.vectorstores.pgvector import DistanceStrategy
-from langchain.docstore.document import Document
-from langchain.chains import ConversationalRetrievalChain
 from langchain.chains import RetrievalQA
-from langchain.memory import ConversationBufferMemory
+
 
 # InstructorEmbedding
-from InstructorEmbedding import INSTRUCTOR
 from langchain.embeddings import HuggingFaceInstructEmbeddings
 
 
