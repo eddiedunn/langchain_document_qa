@@ -34,7 +34,7 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=333, chunk_overlap=33)
 texts = text_splitter.split_documents(documents)
 
 instructor_embeddings = HuggingFaceInstructEmbeddings(
-                            model_name="hkunlp/instructor-large", 
+                            model_name=os.getenv('EMBEDDINGS_MODEL'), 
                             model_kwargs={"device": "cuda" }
 )
 

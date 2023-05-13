@@ -22,7 +22,7 @@ load_dotenv()
 
 
 instructor_embeddings = HuggingFaceInstructEmbeddings(
-                            model_name="hkunlp/instructor-xl", 
+                            model_name=os.getenv('EMBEDDINGS_MODEL'), 
                             model_kwargs={"device": "cuda" }
 )
 
