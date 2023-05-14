@@ -1,13 +1,15 @@
 import os
 # needed for llm in from_chain_type()
-import openai
+
 import textwrap
 # needed for editing questions on command line. Also allows to arrow up for previous questions
 import readline
 
 from dotenv import load_dotenv
 
-from langchain.llms import OpenAI
+#from langchain import PromptTemplate, LLMChain
+from langchain.llms import GPT4All
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.vectorstores.pgvector import PGVector
 from langchain.vectorstores.pgvector import DistanceStrategy
 from langchain.chains import RetrievalQA
@@ -75,8 +77,14 @@ store = PGVector(
 
 retriever = store.as_retriever()
 
+local_path = './models/ggml-gpt4all-l13b-snoozy.bin'
+# Callbacks support token-wise streaming
+callbacks = [StreamingStdOutCallbackHandler()]
+# Verbose is required to pass to the callback manager
+llm = GPT4All(model=local_path, callbacks=callbacks, verbose=True)
+
 #create the chain to answer questions 
-qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=OpenAI(temperature=1, ), 
+qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=llm, 
                                   chain_type="stuff", 
                                   retriever=retriever, 
                                   return_source_documents=True)
@@ -88,8 +96,8 @@ try:
     while True:
         query = input("Enter your query (or 'ctrl-c' to exit): ")
         llm_response = qa_chain_instrucEmbed(query)
-        print(f"Query: {query}")
-        print("Answer")
+        #print(f"Query: {query}")
+        #print("Answer")
         process_llm_response(llm_response)
 except KeyboardInterrupt:
     print("\nExiting the program.")
