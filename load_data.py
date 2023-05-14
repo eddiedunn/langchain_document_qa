@@ -1,7 +1,8 @@
 from langchain.vectorstores.pgvector import PGVector
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
-#from langchain.document_loaders import PyPDFLoader
+
+# from langchain.document_loaders import PyPDFLoader
 from langchain.document_loaders import PyMuPDFLoader
 from langchain.document_loaders import DirectoryLoader
 from langchain.docstore.document import Document
@@ -23,7 +24,7 @@ torch.cuda.empty_cache()
 load_dotenv()
 
 loader = DirectoryLoader(
-    os.getenv('PDF_ROOT'),
+    os.getenv("PDF_ROOT"),
     glob="./*.pdf",
     loader_cls=PyMuPDFLoader,
     recursive=True,
@@ -34,18 +35,17 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=333, chunk_overlap=33)
 texts = text_splitter.split_documents(documents)
 
 instructor_embeddings = HuggingFaceInstructEmbeddings(
-                            model_name=os.getenv('EMBEDDINGS_MODEL'), 
-                            model_kwargs={"device": "cuda" }
+    model_name=os.getenv("EMBEDDINGS_MODEL"), model_kwargs={"device": "cuda"}
 )
 
 
 CONNECTION_STRING = PGVector.connection_string_from_db_params(
-    driver=os.getenv('PGVECTOR_DRIVER'),
-    host=os.getenv('PGVECTOR_HOST'),
-    port=os.getenv('PGVECTOR_PORT'),
-    database=os.getenv('PGVECTOR_DATABASE'),
-    user=os.getenv('PGVECTOR_USER'),
-    password=os.getenv('PGVECTOR_PASSWORD')
+    driver=os.getenv("PGVECTOR_DRIVER"),
+    host=os.getenv("PGVECTOR_HOST"),
+    port=os.getenv("PGVECTOR_PORT"),
+    database=os.getenv("PGVECTOR_DATABASE"),
+    user=os.getenv("PGVECTOR_USER"),
+    password=os.getenv("PGVECTOR_PASSWORD"),
 )
 
 print("starting to create embeddings")
@@ -53,7 +53,7 @@ print("starting to create embeddings")
 db = PGVector.from_documents(
     documents=texts,
     embedding=instructor_embeddings,
-    collection_name=os.getenv('COLLECTION_NAME'),
+    collection_name=os.getenv("COLLECTION_NAME"),
     connection_string=CONNECTION_STRING,
 )
 
