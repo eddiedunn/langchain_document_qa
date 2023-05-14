@@ -40,7 +40,7 @@ Start container with a script similar to `docker_run.sh.example` (make a copy fi
 I recommend using a virtualenv with conda or pyenv. You will also need an nvidia video card and cuda drivers installed.
 
 ```bash
-pip install python-dotenv openai langchain InstructorEmbedding pypdf pgvector psycopg2-binary torch torchvision torchaudio sentence_transformers
+pip install python-dotenv openai langchain InstructorEmbedding pypdf pgvector psycopg2-binary torch xformers sentence_transformers
 ```
 
 ### Load data
@@ -105,3 +105,10 @@ postgres=# alter table langchain_pg_embedding alter column embedding type vector
 ```
 
 ref: https://github.com/hwchase17/langchain/issues/2219
+
+
+### Additional pip packages
+
+```bash
+pip install grpcio-status==1.33.2 protobuf==3.19.6
+```

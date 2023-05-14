@@ -1,8 +1,7 @@
 import os
-# needed for llm in from_chain_type()
-import openai
 import textwrap
-# needed for editing questions on command line. Also allows to arrow up for previous questions
+import time
+import torch
 import readline
 
 from dotenv import load_dotenv
@@ -11,7 +10,8 @@ from langchain.llms import OpenAI
 from langchain.vectorstores.pgvector import PGVector
 from langchain.vectorstores.pgvector import DistanceStrategy
 from langchain.chains import RetrievalQA
-
+from langchain.llms import HuggingFacePipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModelForSeq2SeqLM
 
 # InstructorEmbedding
 from langchain.embeddings import HuggingFaceInstructEmbeddings
@@ -42,12 +42,16 @@ def process_llm_response(llm_response):
 
 # load variables from .env
 load_dotenv()
+torch.cuda.empty_cache()
 
 
+start_time = time.time()
 instructor_embeddings = HuggingFaceInstructEmbeddings(
                             model_name=os.getenv('EMBEDDINGS_MODEL'), 
                             model_kwargs={"device": "cuda" }
 )
+end_time = time.time()
+print(f"Embedding Model load Time: {end_time - start_time} seconds")
 
 CONNECTION_STRING = PGVector.connection_string_from_db_params(
     driver=os.getenv('PGVECTOR_DRIVER'),
@@ -58,6 +62,30 @@ CONNECTION_STRING = PGVector.connection_string_from_db_params(
     password=os.getenv('PGVECTOR_PASSWORD')
 )
 
+print("Start LLM Model loading")
+model_id = os.getenv('LLM_MODEL')
+start_time = time.time()
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+print("AutoTokenizer loaded")
+model = AutoModelForCausalLM.from_pretrained(model_id)
+# Use CUDA if it's available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Move the model to the GPU
+#model.to(device)
+print("AutoModelForCausalLM loaded")
+pipeline = pipeline(
+    "text-generation", 
+    device=device,
+    model=model, 
+    tokenizer=tokenizer, 
+    max_length=2000
+)
+
+local_llm = HuggingFacePipeline(pipeline=pipeline)
+print("HuggingFacePipeline loaded")
+end_time = time.time()
+print(f"LLM Model load Time: {end_time - start_time} seconds")
 
 # Pull in details to query pgvector database
 
@@ -76,7 +104,7 @@ store = PGVector(
 retriever = store.as_retriever()
 
 #create the chain to answer questions 
-qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=OpenAI(temperature=1, ), 
+qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=local_llm, 
                                   chain_type="stuff", 
                                   retriever=retriever, 
                                   return_source_documents=True)
@@ -87,10 +115,15 @@ qa_chain_instrucEmbed = RetrievalQA.from_chain_type(llm=OpenAI(temperature=1, ),
 try:
     while True:
         query = input("Enter your query (or 'ctrl-c' to exit): ")
+
+        start_time = time.time()
         llm_response = qa_chain_instrucEmbed(query)
+        end_time = time.time()
+
         print(f"Query: {query}")
         print("Answer")
         process_llm_response(llm_response)
+        print(f"Query Time: {end_time - start_time} seconds")
 except KeyboardInterrupt:
     print("\nExiting the program.")
 
