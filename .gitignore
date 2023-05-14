@@ -1,3 +1,4 @@
 .env
 .python-version
 docker_run.sh
+models/*
