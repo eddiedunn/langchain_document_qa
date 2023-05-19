@@ -28,9 +28,7 @@ Modify with your specifics including:
 To install pgvector using Docker (make sure you have docker installed)
 
 ```bash
-git clone https://github.com/pgvector/pgvector
-cd pgvector
-sudo docker build .
+docker image pull ankane/pgvector
 ```
 
 Start container with a script similar to `docker_run.sh.example` (make a copy first if desired)
@@ -53,23 +51,6 @@ python load_data.py
 
 ```bash
 python query_data.py
-```
-
-
-### Create Database via command line
-
-```bash
-docker exec -it pg-docker bash
-```
-
-Once in shell
-
-```bash
-root@2045d767567:/# psql -U postgres
-psql (15.3 (Debian 15.3-1.pgdg110+1))
-Type "help" for help.
-
-postgres=# CREATE DATABASE {YOUR DATABASE NAME}
 ```
 
 
