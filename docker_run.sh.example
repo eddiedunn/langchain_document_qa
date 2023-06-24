@@ -1,3 +1,0 @@
-docker run --rm --name pg-docker -e POSTGRES_PASSWORD=$PGVECTOR_PASSWORD \
-    -v $PGVECTOR_DATA_PATH:/var/lib/postgresql/data \
-    -d -p 5432:5432 ankane/pgvector
