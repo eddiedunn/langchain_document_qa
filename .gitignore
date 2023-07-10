@@ -3,3 +3,4 @@
 docker_run.sh
 models/*
 history_code_temp.py
+db-simple/*
